@@ -30,6 +30,20 @@ app.get('/veiculos', (req, res) => {
 });
 
 
+// BUSCAR VEÍCULO POR ID
+app.get('/veiculos/:id', (req, res) => {
+  const data = readData();
+  const id = Number(req.params.id);
+  const veiculo = data.find(v => v.id === id);
+
+  if (!veiculo) {
+    return res.status(404).json({ mensagem: 'Veículo não encontrado' });
+  }
+
+  res.json(veiculo);
+});
+
+
 // CADASTRAR VEÍCULO
 app.post('/veiculos', (req, res) => {
 
@@ -81,13 +95,17 @@ app.delete('/veiculos/:id', (req, res) => {
 
   const id = Number(req.params.id);
 
+  const index = data.findIndex(v => v.id === id);
+
+  if (index === -1) {
+    return res.status(404).json({ mensagem: 'Veículo não encontrado' });
+  }
+
   const novaLista = data.filter(v => v.id !== id);
 
   saveData(novaLista);
 
-  res.json({
-    mensagem: 'Veículo removido'
-  });
+  res.json({ mensagem: 'Veículo removido' });
 });
 
 

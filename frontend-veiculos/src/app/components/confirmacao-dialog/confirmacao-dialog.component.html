@@ -1,0 +1,14 @@
+<h2 mat-dialog-title>
+  <mat-icon color="warn" style="vertical-align: middle; margin-right: 8px;">warning</mat-icon>
+  {{ data.titulo }}
+</h2>
+
+<mat-dialog-content>
+  <p>{{ data.mensagem }}</p>
+  <p *ngIf="data.detalhe" class="detalhe">{{ data.detalhe }}</p>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cancelar()">Cancelar</button>
+  <button mat-raised-button color="warn" (click)="confirmar()">Excluir</button>
+</mat-dialog-actions>

@@ -1,0 +1,68 @@
+@use '@angular/material' as mat;
+@use '@angular/cdk' as cdk;
+
+@include cdk.overlay();
+
+// =============================================================
+// PALETA CUSTOMIZADA
+// =============================================================
+$md-custom: (
+  50:   #fff7e0,
+  100:  #feebb3,
+  200:  #fddd80,
+  300:  #fccf4d,
+  400:  #fcc526,
+  500:  #fbc119,
+  600:  #fab500,
+  700:  #faac00,
+  800:  #f9a400,
+  900:  #f89600,
+  A100: #ffffff,
+  A200: #fff6eb,
+  A400: #ffe0b8,
+  A700: #ffd49f,
+  contrast: (
+    50:   #000000,
+    100:  #000000,
+    200:  #000000,
+    300:  #000000,
+    400:  #000000,
+    500:  #000000,
+    600:  #000000,
+    700:  #000000,
+    800:  #000000,
+    900:  #000000,
+    A100: #000000,
+    A200: #000000,
+    A400: #000000,
+    A700: #000000,
+  ),
+);
+
+// =============================================================
+// Tema M2 — primary usa o shade 600 como default, accent o 300.
+// =============================================================
+$portal-primary: mat.define-palette($md-custom, 600, 300, 900);
+$portal-accent:  mat.define-palette($md-custom, 300, 100, 600);
+$portal-warn:    mat.define-palette(mat.$red-palette);
+
+$portal-typography: mat.define-typography-config(
+  $font-family: 'Manrope, Roboto, "Helvetica Neue", sans-serif',
+);
+
+$portal-theme: mat.define-light-theme((
+  color: (
+    primary: $portal-primary,
+    accent:  $portal-accent,
+    warn:    $portal-warn,
+  ),
+  typography: $portal-typography,
+  density: 0,
+));
+
+// Aplica o tema no seletor onde o mixin for chamado.
+// Padrão: chamar em `html` no styles.scss.
+// Por tenant: chamar de novo dentro de `.theme-cliente-x`.
+@mixin apply-theme($theme: $portal-theme) {
+  @include mat.all-component-themes($theme);
+}

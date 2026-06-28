@@ -1,0 +1,30 @@
+.container {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.formulario {
+  padding: 1.5rem;
+  background-color: #F6CFF4;
+  border-radius: 8px;
+}
+
+form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem 1rem;
+  margin-top: 1rem;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.botoes {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+  justify-content: flex-end;
+}

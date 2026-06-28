@@ -1,0 +1,60 @@
+<div class="container">
+
+  <mat-card class="formulario">
+    <mat-card-title>{{ editandoId ? 'Editar Veículo' : 'Novo Veículo' }}</mat-card-title>
+
+    <form [formGroup]="formulario" (ngSubmit)="salvar()">
+
+      <mat-form-field appearance="outline">
+        <mat-label>Placa</mat-label>
+        <input matInput formControlName="placa" placeholder="Ex: ABC1234 ou ABC1D23" maxlength="7">
+        <mat-error *ngIf="formulario.get('placa')?.hasError('required')">Placa é obrigatória</mat-error>
+        <mat-error *ngIf="formulario.get('placa')?.hasError('pattern')">Placa inválida. Use ABC1234 (antiga) ou ABC1D23 (Mercosul)</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Chassi</mat-label>
+        <input matInput formControlName="chassi" placeholder="17 caracteres alfanuméricos" maxlength="17">
+        <mat-error *ngIf="formulario.get('chassi')?.hasError('required')">Chassi é obrigatório</mat-error>
+        <mat-error *ngIf="formulario.get('chassi')?.hasError('pattern')">Chassi deve ter 17 caracteres (sem as letras I, O e Q)</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Renavam</mat-label>
+        <input matInput formControlName="renavam" placeholder="9 a 11 dígitos" maxlength="11">
+        <mat-error *ngIf="formulario.get('renavam')?.hasError('required')">Renavam é obrigatório</mat-error>
+        <mat-error *ngIf="formulario.get('renavam')?.hasError('pattern')">Renavam deve conter entre 9 e 11 números</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Modelo</mat-label>
+        <input matInput formControlName="modelo" maxlength="100">
+        <mat-error *ngIf="formulario.get('modelo')?.hasError('required')">Modelo é obrigatório</mat-error>
+        <mat-error *ngIf="formulario.get('modelo')?.hasError('maxlength')">Modelo deve ter no máximo 100 caracteres</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Marca</mat-label>
+        <input matInput formControlName="marca" maxlength="50">
+        <mat-error *ngIf="formulario.get('marca')?.hasError('required')">Marca é obrigatória</mat-error>
+        <mat-error *ngIf="formulario.get('marca')?.hasError('maxlength')">Marca deve ter no máximo 50 caracteres</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Ano</mat-label>
+        <input matInput formControlName="ano" [matAutocomplete]="autoAno" maxlength="4" placeholder="Ex: 2020">
+        <mat-autocomplete #autoAno="matAutocomplete">
+          <mat-option *ngFor="let ano of anosFiltrados" [value]="ano">{{ ano }}</mat-option>
+        </mat-autocomplete>
+        <mat-error *ngIf="formulario.get('ano')?.hasError('required')">Ano é obrigatório</mat-error>
+      </mat-form-field>
+
+      <div class="botoes">
+        <button mat-raised-button color="primary" type="submit">Salvar</button>
+        <button mat-button type="button" (click)="cancelar()">Cancelar</button>
+      </div>
+
+    </form>
+  </mat-card>
+
+</div>

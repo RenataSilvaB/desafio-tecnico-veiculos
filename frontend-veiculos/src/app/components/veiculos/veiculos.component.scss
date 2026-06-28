@@ -1,0 +1,36 @@
+.container {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.cabecalho {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+
+  h1 {
+    color: #111111;
+    font-size: 1.8rem;
+    margin: 0;
+  }
+}
+
+.tabela {
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+:host ::ng-deep {
+  .mat-header-cell {
+    background-color: #fbbb00;
+    color: #111111;
+    font-weight: bold;
+  }
+
+  .mat-row:hover .mat-cell {
+    background-color: #FFEE58;
+  }
+}

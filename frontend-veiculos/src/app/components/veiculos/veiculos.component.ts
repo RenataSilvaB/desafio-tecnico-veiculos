@@ -1,69 +1,64 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
+import { startWith, switchMap } from 'rxjs/operators';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
 import { VeiculoService } from '../../services/veiculo.service';
+import { Veiculo } from '../../models/veiculo.model';
+import { ConfirmacaoDialogComponent } from '../confirmacao-dialog/confirmacao-dialog.component';
 
 @Component({
   selector: 'app-veiculos',
   templateUrl: './veiculos.component.html',
   styleUrls: ['./veiculos.component.scss']
 })
-export class VeiculosComponent implements OnInit {
+export class VeiculosComponent {
 
-  veiculos$ = this.veiculoService.listar();
-  formulario!: FormGroup;
-  editandoId: number | null = null;
+  private reload$ = new Subject<void>();
+  veiculos$ = this.reload$.pipe(
+    startWith(null),
+    switchMap(() => this.veiculoService.listar())
+  );
+
+  colunas = ['placa', 'modelo', 'marca', 'ano', 'acoes'];
 
   constructor(
     private veiculoService: VeiculoService,
-    private fb: FormBuilder
+    private router: Router,
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog
   ) {}
 
-  ngOnInit(): void {
-    this.criarFormulario();
+  novo(): void {
+    this.router.navigate(['/veiculos/novo']);
   }
 
-  criarFormulario(): void {
-    this.formulario = this.fb.group({
-      placa:   ['', Validators.required],
-      chassi:  ['', Validators.required],
-      renavam: ['', Validators.required],
-      modelo:  ['', Validators.required],
-      marca:   ['', Validators.required],
-      ano:     ['', Validators.required]
+  editar(veiculo: Veiculo): void {
+    this.router.navigate(['/veiculos/editar', veiculo.id]);
+  }
+
+  excluir(veiculo: Veiculo): void {
+    const dialogRef = this.dialog.open(ConfirmacaoDialogComponent, {
+      width: '400px',
+      data: {
+        titulo: 'Excluir Veículo',
+        mensagem: `Deseja excluir o veículo ${veiculo.modelo} (${veiculo.placa})?`,
+        detalhe: 'Esta ação não pode ser desfeita.'
+      }
     });
-  }
 
-  salvar(): void {
-    if (this.formulario.invalid) return;
-
-    if (this.editandoId) {
-      this.veiculoService.editar(this.editandoId, this.formulario.value).subscribe(() => {
-        this.veiculos$ = this.veiculoService.listar();
-        this.cancelar();
+    dialogRef.afterClosed().subscribe(confirmado => {
+      if (!confirmado || veiculo.id == null) return;
+      this.veiculoService.excluir(veiculo.id).subscribe({
+        next: () => {
+          this.snackBar.open('Veículo excluído com sucesso', 'Fechar', { duration: 3000 });
+          this.reload$.next();
+        },
+        error: () => {
+          this.snackBar.open('Erro ao excluir veículo', 'Fechar', { duration: 3000 });
+        }
       });
-    } else {
-      this.veiculoService.cadastrar(this.formulario.value).subscribe(() => {
-        this.veiculos$ = this.veiculoService.listar();
-        this.cancelar();
-      });
-    }
-  }
-
-  editar(veiculo: any): void {
-    this.editandoId = veiculo.id;
-    this.formulario.patchValue(veiculo);
-  }
-
-  excluir(id: number): void {
-    this.veiculoService.excluir(id).subscribe(() => {
-      this.veiculos$ = this.veiculoService.listar();
     });
-  }
-
-  cancelar(): void {
-    this.editandoId = null;
-    this.formulario.reset();
   }
 }
-
-
